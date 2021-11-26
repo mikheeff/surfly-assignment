@@ -1,6 +1,15 @@
 <template>
   <div class="tournaments-overview">
     <div class="container">
+      <div class="title-container">
+        <h1 class="title">Tournaments</h1>
+        <button
+          @click="addTournament"
+          class="button is-primary"
+        >
+          Add tournament
+        </button>
+      </div>
       <table class="table">
         <thead>
         <tr>
@@ -85,6 +94,11 @@
     name: 'TournamentsOverview',
     created() {
       tournamentsModule.getTournaments();
+    },
+    methods: {
+      addTournament() {
+        tournamentsModule.createTournament();
+      },
     },
   });
 </script>
