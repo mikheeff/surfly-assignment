@@ -4,7 +4,9 @@
     id="app"
   >
     <Header/>
-    <router-view/>
+    <main class="main">
+      <router-view/>
+    </main>
   </div>
 </template>
 
@@ -22,4 +24,17 @@
 
 <style lang="scss">
 
+  .klask-tournament-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+
+    .main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+    }
+  }
 </style>

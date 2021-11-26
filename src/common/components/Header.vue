@@ -1,6 +1,7 @@
 <template>
   <div class="header">
     I am header
+    <router-link :to="{ name: 'TournamentsOverview' }">Tournaments Overview</router-link>
   </div>
 </template>
 
