@@ -20,7 +20,8 @@ module.exports = {
       ignoreUrls: true,
       ignorePattern: 'import\\s.+\\sfrom\\s.+;$',
     }],
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
+    'no-shadow': 'off',
   },
   overrides: [
     {
@@ -29,5 +30,5 @@ module.exports = {
         indent: 'off',
       },
     },
-  ]
+  ],
 };

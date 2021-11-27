@@ -14,3 +14,15 @@
     margin-left: 24px;
   }
 }
+
+// opacity
+.opacity-enter-active,
+.opacity-leave-active {
+  transition: opacity 0.2s;
+}
+
+.opacity-enter,
+.opacity-leave-to {
+  opacity: 0;
+}
+

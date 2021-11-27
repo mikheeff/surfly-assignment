@@ -4,105 +4,89 @@
       <div class="title-container">
         <h1 class="title">Tournaments</h1>
         <button
-          @click="addTournament"
+          @click="tournamentsModule.isCreateTournamentModalOpen = true"
           class="button is-primary"
         >
           Add tournament
         </button>
       </div>
-      <table class="table">
+      <table
+        v-if="tournamentsModule.tournaments.length"
+        class="table"
+      >
         <thead>
         <tr>
-          <th><abbr title="Position">Pos</abbr></th>
-          <th>Team</th>
-          <th><abbr title="Played">Pld</abbr></th>
-          <th><abbr title="Won">W</abbr></th>
-          <th><abbr title="Drawn">D</abbr></th>
-          <th><abbr title="Lost">L</abbr></th>
-          <th><abbr title="Goals for">GF</abbr></th>
-          <th><abbr title="Goals against">GA</abbr></th>
-          <th><abbr title="Goal difference">GD</abbr></th>
-          <th><abbr title="Points">Pts</abbr></th>
-          <th>Qualification or relegation</th>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Participants</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <th>1</th>
-          <td><a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">Leicester City</a> <strong>(C)</strong>
-          </td>
-          <td>38</td>
-          <td>23</td>
-          <td>12</td>
-          <td>3</td>
-          <td>68</td>
-          <td>36</td>
-          <td>+32</td>
-          <td>81</td>
-          <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td><a href="https://en.wikipedia.org/wiki/Arsenal_F.C." title="Arsenal F.C.">Arsenal</a></td>
-          <td>38</td>
-          <td>20</td>
-          <td>11</td>
-          <td>7</td>
-          <td>65</td>
-          <td>36</td>
-          <td>+29</td>
-          <td>71</td>
-          <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-        </tr>
-        <tr>
-          <th>3</th>
-          <td><a href="https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C." title="Tottenham Hotspur F.C.">Tottenham Hotspur</a></td>
-          <td>38</td>
-          <td>19</td>
-          <td>13</td>
-          <td>6</td>
-          <td>69</td>
-          <td>35</td>
-          <td>+34</td>
-          <td>70</td>
-          <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-        </tr>
-        <tr class="is-selected">
-          <th>4</th>
-          <td><a href="https://en.wikipedia.org/wiki/Manchester_City_F.C." title="Manchester City F.C.">Manchester City</a></td>
-          <td>38</td>
-          <td>19</td>
-          <td>9</td>
-          <td>10</td>
-          <td>71</td>
-          <td>41</td>
-          <td>+30</td>
-          <td>66</td>
-          <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Play-off_round" title="2016–17 UEFA Champions League">Champions League play-off round</a></td>
+        <tr
+          v-for="tournament in tournamentsModule.tournaments"
+          :key="tournament.id"
+          @click="selectedTournament = tournament"
+        >
+          <td>{{ tournament.id }}</td>
+          <td>{{ new Date(tournament.date).toLocaleDateString() }}</td>
+          <td>{{ tournament.status }}</td>
+          <td>{{ tournament.players.join(', ') }}</td>
         </tr>
         </tbody>
       </table>
+      <div v-else>
+        No tournaments
+      </div>
+      <div
+        v-if="selectedTournament"
+        class="table-container"
+      >
+        <table class="is-bordered is-striped table">
+          <tbody>
+          <tr
+            v-for="(round, index) in selectedTournament.rounds"
+            :key="round.id"
+          >
+            <td><strong>Round {{ index + 1 }}</strong></td>
+            <td
+              v-for="match in round"
+              :key="match.id"
+            >
+              {{ match.players[0] }} - {{ match.players[1] }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <CreateTournamentModal v-model="tournamentsModule.isCreateTournamentModalOpen" />
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
   import tournamentsModule from '@/store/modules/tournaments';
+  import CreateTournamentModal from '@/modules/tournaments/CreateTournamentModal.vue';
 
   export default Vue.extend({
     name: 'TournamentsOverview',
+    components: { CreateTournamentModal },
+    data() {
+      return {
+        tournamentsModule,
+        selectedTournament: null,
+      };
+    },
     created() {
       tournamentsModule.getTournaments();
-    },
-    methods: {
-      addTournament() {
-        tournamentsModule.createTournament();
-      },
     },
   });
 </script>
 
 <style lang="scss" scoped>
 
+  .app-modal {
+    display: flex;
+  }
 </style>

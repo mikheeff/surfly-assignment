@@ -1,3 +1,4 @@
 export interface Game {
- id: string;
+  id: string;
+  winner: string | null;
 }

@@ -2,5 +2,6 @@ import { Game } from '@/common/types/Game';
 
 export interface Match {
   id: string;
-  games: Game[];
+  players: [string | null, string | null];
+  games: [Game] | [Game, Game] | [Game, Game, Game] | null;
 }
