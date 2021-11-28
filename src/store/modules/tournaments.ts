@@ -6,12 +6,19 @@ import { Tournament } from '@/common/types/Tournament';
 import TournamentsService from '@/services/TournamentsService';
 import TournamentStatus from '@/common/types/TournamentStatus';
 import notificationsModule from '@/store/modules/notificationsModule';
+import RoundStatus from '@/common/types/RoundStatus';
+import { Score } from '@/common/types/Game';
+import { Match } from '@/common/types/Match';
 
 interface TournamentsState {
   tournaments: Tournament[];
   players: string[];
   isCreateTournamentModalOpen: boolean;
+  isAddGameModalOpen: boolean;
   tournamentDetails: Tournament | null;
+  selectedMatch: Match | null;
+  score1: Score;
+  score2: Score;
 }
 
 // interface/class merging is needed here to avoid duplicate type annotations during class declaration
@@ -42,7 +49,6 @@ class TournamentsModule extends ExtendedVuexModule<TournamentsState> {
         status: TournamentStatus.NOT_STARTED,
       });
 
-      this.resetPlayers();
       await this.getTournaments();
 
       notificationsModule.addNotification('Tournament has been created');
@@ -58,6 +64,50 @@ class TournamentsModule extends ExtendedVuexModule<TournamentsState> {
   }
 
   @Action
+  async startTournament(id: string): Promise<void> {
+    if (!this.tournamentDetails) {
+      throw new Error('no tournament');
+    }
+
+    const newRounds = [...this.tournamentDetails.rounds];
+    const firstRound = newRounds.find((round) => round.id === '1');
+
+    if (firstRound) {
+      firstRound.status = RoundStatus.IN_PROGRESS;
+    }
+
+    await TournamentsService.updateTournamentById(id, {
+      status: TournamentStatus.IN_PROGRESS,
+      rounds: newRounds,
+    });
+
+    await this.getTournamentDetails(id);
+  }
+
+  // @Action
+  // async addGameToTournament(game: Game): Promise<void> {
+  //   if (!this.tournamentDetails || !this.selectedMatch) {
+  //     throw new Error('no tournament');
+  //   }
+
+  // const game = { // TODO: finish add game
+  //   id: uuidv4(),
+  //   scores: [this.score1, this.score2],
+  // };
+
+  // const newRounds = [...this.tournamentDetails.rounds];
+  //
+  // const match = newRounds.find((round) => round.matches.find((match) => match.id === this.selectedMatch!.id));
+  //
+  // if (match) {
+  //   match
+  // }
+  // await TournamentsService.updateTournamentById(this.tournamentDetails.id, {
+  //   rounds: newRounds,
+  // });
+  // }
+
+  @Action
   resetPlayers(): void {
     this.players = [''];
   }
@@ -68,7 +118,17 @@ const tournamentsModule = new TournamentsModule({
     tournaments: [],
     players: [''],
     isCreateTournamentModalOpen: false,
+    isAddGameModalOpen: false,
     tournamentDetails: null,
+    selectedMatch: null,
+    score1: {
+      player: '',
+      score: 0,
+    },
+    score2: {
+      player: '',
+      score: 0,
+    },
   },
   store,
   name: 'tournaments',

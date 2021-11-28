@@ -26,3 +26,10 @@
   opacity: 0;
 }
 
+::v-deep .modal-card-body {
+  min-height: 600px;
+}
+
+.app-modal {
+  display: flex;
+}

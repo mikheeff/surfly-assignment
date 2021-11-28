@@ -1,10 +1,7 @@
 <template>
   <AppModal
     class="create-tournament-modal"
-    @save="createTournament"
-    @input="handleInput"
-    v-bind="$attrs"
-    v-on="$listeners"
+    @exit="exit"
   >
     <template slot="modal-title">Create Tournament</template>
     <p class="subtitle">Please enter participants</p>
@@ -30,9 +27,7 @@
     >
       Add player
     </button>
-    <template
-      v-slot:modal-footer="{ exit }"
-    >
+    <template #modal-footer>
       <button
         class="button is-success"
         :disabled="isCreateButtonDisabled"
@@ -68,6 +63,10 @@
         return tournamentsModule.filledPlayers.length <= 1;
       },
     },
+    destroyed() {
+      tournamentsModule.isCreateTournamentModalOpen = false;
+      tournamentsModule.resetPlayers();
+    },
     methods: {
       addPlayer() {
         tournamentsModule.players = [...tournamentsModule.players, ''];
@@ -80,20 +79,14 @@
       createTournament() {
         tournamentsModule.createTournament();
       },
-      handleInput(value: boolean) {
-        if (!value) {
-          tournamentsModule.resetPlayers();
-        }
+      exit() {
+        this.$emit('exit');
       },
     },
   });
 </script>
 
 <style lang="scss" scoped>
-
-  ::v-deep .modal-card-body {
-    min-height: 600px;
-  }
 
   .create-tournament-fieldset {
     margin-bottom: 24px;

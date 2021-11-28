@@ -9,7 +9,6 @@
     </div>
     <div class="navbar-menu">
       <router-link
-        @click.native="isShown = !isShown"
         class="navbar-item"
         :to="{ name: 'TournamentsOverview' }"
       >

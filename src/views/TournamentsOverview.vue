@@ -40,7 +40,10 @@
         No tournaments
       </div>
     </div>
-    <CreateTournamentModal v-model="tournamentsModule.isCreateTournamentModalOpen" />
+    <CreateTournamentModal
+      @exit="tournamentsModule.isCreateTournamentModalOpen = false"
+      v-if="tournamentsModule.isCreateTournamentModalOpen"
+    />
   </div>
 </template>
 
@@ -61,6 +64,9 @@
     created() {
       tournamentsModule.getTournaments();
     },
+    destroyed() {
+      tournamentsModule.resetState();
+    },
   });
 </script>
 
@@ -71,9 +77,5 @@
     background-color: #00d1b2;
     color: #fff;
     transition: all .2s;
-  }
-
-  .app-modal {
-    display: flex;
   }
 </style>

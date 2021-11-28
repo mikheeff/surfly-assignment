@@ -22,6 +22,7 @@ module.exports = {
     }],
     'import/prefer-default-export': 'off',
     'no-shadow': 'off',
+    'import/named': 'off',
   },
   overrides: [
     {

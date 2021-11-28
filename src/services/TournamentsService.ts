@@ -2,7 +2,8 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { Tournament } from '@/common/types/Tournament';
 import { shuffle } from '@/common/utils/GeneralUtils';
-import { Match } from '@/common/types/Match';
+import { Round } from '@/common/types/Round';
+import RoundStatus from '@/common/types/RoundStatus';
 
 export default class TournamentsService {
   static async getTournaments(): Promise<Tournament[]> {
@@ -21,7 +22,11 @@ export default class TournamentsService {
     await axios.post('http://localhost:3000/tournaments', tournament);
   }
 
-  static generateRounds(inputPlayers: string[]): Match[][] {
+  static async updateTournamentById(id: string, tournament: Partial<Tournament>): Promise<void> {
+    await axios.patch(`http://localhost:3000/tournaments/${id}`, tournament);
+  }
+
+  static generateRounds(inputPlayers: string[]): Round[] {
     const players: (string | null)[] = [...shuffle(inputPlayers)];
     const playersAmount = players.length;
 
@@ -29,7 +34,7 @@ export default class TournamentsService {
       return [];
     }
 
-    const rounds: Match[][] = [];
+    const rounds: Round[] = [];
     const isEven = playersAmount % 2 === 0;
     const roundsAmount = isEven ? playersAmount - 1 : playersAmount;
     const matchesPerRound = Math.ceil(playersAmount / 2);
@@ -41,10 +46,14 @@ export default class TournamentsService {
     for (let round = 0; round < roundsAmount; round += 1) {
       for (let match = 0; match < matchesPerRound; match += 1) {
         if (!rounds[round]) {
-          rounds[round] = [];
+          rounds[round] = {
+            id: String(round + 1),
+            status: RoundStatus.NOT_STARTED,
+            matches: [],
+          };
         }
 
-        rounds[round].push({
+        rounds[round].matches.push({
           id: uuidv4(),
           games: null,
           players: [

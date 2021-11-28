@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="value"
-    class="app-modal modal"
-  >
+  <div class="app-modal modal">
     <div
       @click="exit"
       class="modal-background"
@@ -38,15 +35,9 @@
 
   export default Vue.extend({
     name: 'AppModal',
-    props: {
-      value: {
-        type: Boolean,
-        required: true,
-      },
-    },
     methods: {
       exit() {
-        this.$emit('input', false);
+        this.$emit('exit');
       },
     },
   });
