@@ -11,6 +11,12 @@ export default class TournamentsService {
     return data;
   }
 
+  static async getTournamentById(id: string): Promise<Tournament> {
+    const { data } = await axios.get<Tournament>(`http://localhost:3000/tournaments/${id}`);
+
+    return data;
+  }
+
   static async createTournament(tournament: Tournament): Promise<void> {
     await axios.post('http://localhost:3000/tournaments', tournament);
   }

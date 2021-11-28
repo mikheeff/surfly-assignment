@@ -11,6 +11,7 @@ interface TournamentsState {
   tournaments: Tournament[];
   players: string[];
   isCreateTournamentModalOpen: boolean;
+  tournamentDetails: Tournament | null;
 }
 
 // interface/class merging is needed here to avoid duplicate type annotations during class declaration
@@ -52,6 +53,11 @@ class TournamentsModule extends ExtendedVuexModule<TournamentsState> {
   }
 
   @Action
+  async getTournamentDetails(id: string): Promise<void> {
+    this.tournamentDetails = await TournamentsService.getTournamentById(id);
+  }
+
+  @Action
   resetPlayers(): void {
     this.players = [''];
   }
@@ -62,6 +68,7 @@ const tournamentsModule = new TournamentsModule({
     tournaments: [],
     players: [''],
     isCreateTournamentModalOpen: false,
+    tournamentDetails: null,
   },
   store,
   name: 'tournaments',

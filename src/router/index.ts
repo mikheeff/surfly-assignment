@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Home from '../views/Home.vue';
 import TournamentsOverview from '@/views/TournamentsOverview.vue';
+import TournamentDetails from '@/views/TournamentDetails.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,12 @@ const routes: Array<RouteConfig> = [
     path: '/tournaments',
     name: 'TournamentsOverview',
     component: TournamentsOverview,
+  },
+  {
+    path: '/tournaments/:id',
+    name: 'TournamentDetails',
+    component: TournamentDetails,
+    props: true,
   },
 ];
 

@@ -1,6 +1,6 @@
 <template>
   <div class="tournaments-overview">
-    <div class="container">
+    <div class="container content">
       <div class="title-container">
         <h1 class="title">Tournaments</h1>
         <button
@@ -24,9 +24,10 @@
         </thead>
         <tbody>
         <tr
+          class="table-row"
           v-for="tournament in tournamentsModule.tournaments"
           :key="tournament.id"
-          @click="selectedTournament = tournament"
+          @click="$router.push({ name: 'TournamentDetails', params: { id: tournament.id } })"
         >
           <td>{{ tournament.id }}</td>
           <td>{{ new Date(tournament.date).toLocaleDateString() }}</td>
@@ -37,27 +38,6 @@
       </table>
       <div v-else>
         No tournaments
-      </div>
-      <div
-        v-if="selectedTournament"
-        class="table-container"
-      >
-        <table class="is-bordered is-striped table">
-          <tbody>
-          <tr
-            v-for="(round, index) in selectedTournament.rounds"
-            :key="round.id"
-          >
-            <td><strong>Round {{ index + 1 }}</strong></td>
-            <td
-              v-for="match in round"
-              :key="match.id"
-            >
-              {{ match.players[0] }} - {{ match.players[1] }}
-            </td>
-          </tr>
-          </tbody>
-        </table>
       </div>
     </div>
     <CreateTournamentModal v-model="tournamentsModule.isCreateTournamentModalOpen" />
@@ -85,6 +65,13 @@
 </script>
 
 <style lang="scss" scoped>
+
+  .table-row:hover {
+    cursor: pointer;
+    background-color: #00d1b2;
+    color: #fff;
+    transition: all .2s;
+  }
 
   .app-modal {
     display: flex;
